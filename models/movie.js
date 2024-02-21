@@ -9,6 +9,7 @@ let movieSchema = new Schema(
             type: String,
             required: true
         },
+        genre: {type: String},
         description: {type: String},
         director: {type: String},
         yearOfRelease: {type: Number},
@@ -16,5 +17,5 @@ let movieSchema = new Schema(
     }
 );
 
-// Export
+// Export model
 module.exports = mongoose.model("movie", movieSchema);
