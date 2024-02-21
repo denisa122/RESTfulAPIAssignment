@@ -18,8 +18,20 @@ app.get("/api/welcome", (request, response) => {
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, function() {
-    console.log("Server is running on port: " + PORT);
+    console.log("Server is running on port " + PORT);
 })
+
+// Connect to MongoDB
+mongoose.connect
+(
+    process.env.HOST,
+    {
+       useUnifiedTopology: true,
+       useNewUrlParser: true 
+    }
+).catch(error => console.log("Connecting to MongoDB failed: " + error));
+
+mongoose.connection.once('open', () => console.log('Successfully connected to MongoDB')); // Display a message once successfully connected to MongoDB
 
 // Export the app as a module
 module.exports = app;
