@@ -29,7 +29,7 @@ mongoose.connect
        useUnifiedTopology: true,
        useNewUrlParser: true 
     }
-).catch(error => console.log("Connecting to MongoDB failed: " + error));
+).catch(error => console.log("Failure connecting to MongoDB: " + error));
 
 mongoose.connection.once('open', () => console.log('Successfully connected to MongoDB')); // Display a message once successfully connected to MongoDB
 
