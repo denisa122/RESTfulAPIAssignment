@@ -29,14 +29,14 @@ router.get("/", (request, response) => {
     .catch(error => { response.status(500).send( {message: error.message}); })
 })
 
-// All movies with specific director
-// /api/movies/director
-router.get("/director", (request, response) => {
+// All movies with specific year of release
+// /api/movies/year
+router.get("/year", (request, response) => {
 
-    movie.find({ director: "Nick Cassavetes" } )
+    movie.find({ yearOfRelease: 2004 } )
     .then(data => { response.send(data); })
     .catch(error => { response.status(500).send( {message: error.message}); })
-})
+}) // Figure out how to write this in postman
 
 // Specific movie
 // /api/movies/:id
