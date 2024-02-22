@@ -2,12 +2,14 @@
 const router = require("express").Router();
 const actor = require("../models/actor");
 
+const { tokenVerification } = require("../userValidation");
+
 // CRUD
 
 // Create
 
 // /api/actors/
-router.post("/", (request, response) => {
+router.post("/", tokenVerification, (request, response) => {
 
     // Get data from the request body
     data = request.body;
@@ -41,7 +43,7 @@ router.get("/:id", (request, response) => {
 // Update
 
 // /api/actors/:id
-router.put("/:id", (request, response) => {
+router.put("/:id", tokenVerification, (request, response) => {
 
     const id = request.params.id;
     
@@ -62,7 +64,7 @@ router.put("/:id", (request, response) => {
 // Delete
 
 // /api/actors/:id
-router.delete("/:id", (request, response) => {
+router.delete("/:id", tokenVerification, (request, response) => {
 
     const id = request.params.id;
     
