@@ -6,6 +6,9 @@ const bodyParser = require("body-parser");
 // Import movie routes
 const movieRoutes = require("./routes/movie");
 
+// Import actor routes
+const actorRoutes = require("./routes/actor");
+
 // Creating the express app
 const app = express();
 
@@ -41,6 +44,8 @@ app.get("/api/welcome", (request, response) => {
 })
 
 app.use("/api/movies", movieRoutes);
+
+app.use("/api/actors", actorRoutes);
 
 // Export the app as a module
 module.exports = app;

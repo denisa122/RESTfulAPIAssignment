@@ -33,7 +33,7 @@ router.get("/", (request, response) => {
 // /api/movies/year
 router.get("/year", (request, response) => {
 
-    movie.find({ yearOfRelease: 2004 } )
+    movie.find({ yearOfRelease: 2010 } )
     .then(data => { response.send(data); })
     .catch(error => { response.status(500).send( {message: error.message}); })
 });
@@ -59,18 +59,37 @@ router.put("/:id", (request, response) => {
     .then(data => { 
         if(!data)
         {
-            response.status(404).send({ message: "Movie with id " + id + " couldn't be updated." })
+            response.status(404).send({ message: "Movie with id " + id + " couldn't be updated. Check if you entered the correct id!" })
         }
         else
         {
             response.send( { message: "Movie with id " + id + " was successfully updated." } )
         }
     })
-    .catch(error => { response.status(500).send( {message: error.message}); })
+    .catch(error => { response.status(500).send( {message: "Error editing the movie with id " + id}); })
 });
 
 
-// Delete -- delete
+// Delete
+
+// api/movies/:id
+router.delete("/:id", (request, response) => {
+
+    const id = request.params.id;
+    
+    movie.findByIdAndDelete(id)
+    .then(data => { 
+        if(!data)
+        {
+            response.status(404).send({ message: "Movie with id " + id + " couldn't be deleted. Check if you entered the correct id!" })
+        }
+        else
+        {
+            response.send( { message: "Movie with id " + id + " was successfully deleted." } )
+        }
+    })
+    .catch(error => { response.status(500).send( {message: "Error deleting the movie with id " + id}); })
+});
 
 // Export routes
 module.exports = router;

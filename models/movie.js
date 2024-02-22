@@ -1,5 +1,6 @@
 // Dependencies
 const mongoose = require("mongoose");
+const actor = require("./actor");
 
 const Schema = mongoose.Schema;
 
@@ -13,7 +14,7 @@ let movieSchema = new Schema(
         description: {type: String},
         director: {type: String},
         yearOfRelease: {type: Number},
-        cast: [{type: String}]  // An array of strings
+        cast: [{ type: Schema.Types.ObjectId, ref: 'actor' }]   // An array of actor references
     }
 );
 
