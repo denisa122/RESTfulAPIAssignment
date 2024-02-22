@@ -1,6 +1,9 @@
 // Dependencies
 const router = require("express").Router();
-const user = require("../models/user");
+const bcrypt = require("bcrypt");
+
+const User = require("../models/user");
+
 const { registerValidation } = require("../userValidation");
 
 
@@ -16,10 +19,42 @@ router.post("/register", async (request, response) => {
     }
 
     // Check if email or username are already taken
+    const usernameTaken = await User.findOne({ username: request.body.username });
+    const emailTaken = await User.findOne({ email: request.body.email });
+
+    if(usernameTaken) {
+        return response.status(400).json({ error: "Username is already taken!" });
+    }
+    
+    if(emailTaken) {
+        return response.status(400).json({ error: "Email is already taken!" });
+    }
 
     // Hash password
+    // Generate salt
+    const salt = await bcrypt.genSalt(10);
 
-    // Create the new user and save it in the DB
+    // Generate hash
+    const password = await bcrypt.hash(request.body.password, salt);
+
+    // Create the new user object and save it in the DB
+    const userObject = new User({
+        firstName: request.body.firstName,
+        lastName: request.body.lastName,
+        username: request.body.username,
+        email: request.body.email,
+        password
+    });
+
+    try {
+        const createdUser = await userObject.save();
+
+        // There was no error and we return the generated id of the newly created user
+        response.json({ error: null, data: createdUser._id });
+
+    } catch (error) {
+        return response.status(400).json({ error });
+    }
     
     return response.status(200).json( { message: "Register route" } );
 });
