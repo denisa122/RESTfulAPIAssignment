@@ -7,18 +7,18 @@ let userSchema = new Schema (
     {
         firstName: {
             type: String,
-            min: 6,
+            min: 2,
             max: 200
         },
         lastName: {
             type: String,
-            min: 6,
+            min: 2,
             max: 200
         },
         username: {
             type: String,
             required: true,
-            min: 10,
+            min: 6,
             max: 25
         },
         email: {

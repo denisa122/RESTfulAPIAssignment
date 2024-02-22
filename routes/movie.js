@@ -53,6 +53,7 @@ router.get("/:id", (request, response) => {
 // api/movies/:id
 router.put("/:id", (request, response) => {
 
+    // Get id from the request
     const id = request.params.id;
     
     movie.findByIdAndUpdate(id, request.body)

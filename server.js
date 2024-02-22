@@ -9,7 +9,10 @@ const movieRoutes = require("./routes/movie");
 // Import actor routes
 const actorRoutes = require("./routes/actor");
 
-// Creating the express app
+// Import authentication routes
+const authRoutes = require("./routes/auth");
+
+// Create the express app
 const app = express();
 
 // Look for a .env file in the project
@@ -44,8 +47,8 @@ app.get("/api/welcome", (request, response) => {
 })
 
 app.use("/api/movies", movieRoutes);
-
 app.use("/api/actors", actorRoutes);
+app.use("/api/user", authRoutes);
 
 // Export the app as a module
 module.exports = app;
