@@ -38,7 +38,7 @@ router.get("/year", (request, response) => {
     .catch(error => { response.status(500).send( {message: error.message}); })
 });
 
-// Specific movie
+// Specific movie by id
 // /api/movies/:id
 router.get("/:id", (request, response) => {
 
