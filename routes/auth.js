@@ -1,10 +1,11 @@
 // Dependencies
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 
-const { registerValidation } = require("../userValidation");
+const { registerValidation, loginValidation } = require("../userValidation");
 
 
 // Register
@@ -55,14 +56,56 @@ router.post("/register", async (request, response) => {
     } catch (error) {
         return response.status(400).json({ error });
     }
-    
-    return response.status(200).json( { message: "Register route" } );
 });
 
 
-// login
+// Login
 router.post("/login", async (request, response) => {
-    return response.status(200).json( { message: "Login route" } );
+
+    // Validate user input (login credentials)
+    const { error } = loginValidation(request.body);
+
+    if(error) {
+        // Bad request from error during validation from joi
+        return response.status(400).json({ error: error.details[0].message });
+    }
+
+    // Find user with provided login credentials
+    const user = await User.findOne({ email: request.body.email });
+
+    // User with provided email does not exist in the DB
+    if(!user) {
+        return response.status(400).json({ error: "Incorrect email!" });
+    }
+
+    // User found in the DB with provided email
+    // Check if password is correct
+    const correctPassword = await bcrypt.compare(request.body.password, user.password);
+
+    // Wrong password
+    if(!correctPassword) {
+        return response.status(400).json({ error: "Incorrect password!" });
+    }
+
+    // Create authentication token
+    const authToken = jwt.sign
+    (
+        // Payload
+        {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            id: user._id
+        },
+
+        process.env.TOKEN_SECRET,
+        {expiresIn: process.env.JWT_EXPIRES_IN },
+    );
+
+    // Attach authentication token to header
+    response.header("auth-token", authToken).json({
+        error: null,
+        data: { authToken }
+    });
 });
 
 // Export routes

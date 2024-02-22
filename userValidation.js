@@ -16,8 +16,19 @@ const registerValidation = (data) => {
 }
 
 // Login validation
+const loginValidation = (data) => {   // Make it work with username OR email
+    const schema = joi.object(
+        {
+            email: joi.string().min(6).max(255).required(),
+            password: joi.string().min(8).max(128).required()
+        });
+
+        return schema.validate(data);
+}
+
+
 
 // Token verification
 
 // Export 
-module.exports = {registerValidation};
+module.exports = {registerValidation, loginValidation};
