@@ -1,7 +1,14 @@
-// Dependencies that were installed earlier
+// Dependencies
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+
+// Swagger
+const swaggerUi = require("swagger-ui-express");
+const yaml = require("yamljs");
+
+// Swagger setup
+const swaggerDefinition = yaml.load("./swagger.yaml");
 
 // Import movie routes
 const movieRoutes = require("./routes/movie");
@@ -49,6 +56,7 @@ app.get("/api/welcome", (request, response) => {
 app.use("/api/movies", movieRoutes);
 app.use("/api/actors", actorRoutes);
 app.use("/api/user", authRoutes);
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDefinition));
 
 // Export the app as a module
 module.exports = app;
