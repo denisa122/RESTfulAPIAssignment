@@ -95,7 +95,7 @@ paths:
       description: ""
       responses:
         200:
-          description: "Successfully retrieved all actors"
+          description: "Successfully retrieved all Actors in the format of a JSON object"
           content:
             application/json:
               schema:
@@ -169,16 +169,150 @@ paths:
           schema:
             type: "string"
       responses:
-      200:
-        description: "Actor deleted successfully"
+        200:
+          description: "Actor deleted successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Actor"
+        404: 
+          description: "Actor with specific id couldn't be updated. Check if you entered the correct id!"
+        500:
+          description: "Internal server error"
+  /movies/:
+    post:
+      tags:
+        - "movie"
+      summary: "Creates a new Movie"
+      description: ""
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Actor"
-      404: 
-        description: "Actor with specific id couldn't be updated. Check if you entered the correct id!"
-      500:
-        description: "Internal server error"
+              $ref: "#/components/schemas/MovieRequest"
+      responses:
+        201:
+          description: "Movie created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovieResponse"
+        500:
+          description: "Internal server error"
+    get:
+      tags:
+      - "movie"
+      summary: "Retrieves a list of Movies"
+      description: ""
+      responses:
+        200:
+          description: "Successfully retrieved all Movies in the format of a JSON object"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/MovieResponse"
+        500:
+          description: "Internal server error"
+  /movies/{year}:
+    get:
+      tags:
+        - "movie"
+      summary: "Retrieves a list of Movies with a specific year of release property"
+      parameters:
+        - in: path
+          name: "year"
+          description: "Year of release"
+          schema: 
+            type: "string"
+      responses:
+        200:
+          description: "Successfully retrieved all Movies in the format of a JSON object"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovieResponse"
+        500: 
+          description: "Internal server error"
+  /movies/{id}:
+    get:
+      tags:
+        - "movie"
+      summary: "Retrieves a Movie with a specific id"
+      description: ""
+      parameters:
+          - in: path
+            name: "id"
+            description: "MongoDB id"
+            schema: 
+              type: "string"
+      responses:
+        200:
+          description: "Successfully retrieved a Movies in the format of a JSON object"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovieResponse"
+        500: 
+          description: "Internal server error"
+    put:
+      tags:
+      - "movie"
+      summary: "Updates a Movie with a specific id"
+      description: ""
+      security:
+       - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: "id"
+          description: "MongoDB id"
+          schema: 
+            type: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+               $ref: "#/components/schemas/MovieRequest"
+      responses:
+        201:
+          description: "Movie updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovieResponse"
+        404:
+          description: "Movie with specific id couldn't be updated. Check if you entered the correct id!"
+        500:
+          description: "Internal server error"
+    delete:
+      tags:
+        - "movie"
+      summary: "Deletes a Movie with a specific id"
+      description: ""
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: "id"
+          description: "MongoDB id"
+          schema:
+            type: "string"
+      responses:
+        200:
+          description: "Movie deleted successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovieResponse"
+        404: 
+          description: "Movie with specific id couldn't be updated. Check if you entered the correct id!"
+        500:
+          description: "Internal server error"
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -204,10 +338,29 @@ components:
           type: "array"
           items:
             type: "string"
-    Movie:
+    MovieRequest:
       type: "object"
       required:
         - title
+      properties:
+        id:
+          type: "string"
+        title:
+          type: "string"
+        genre:
+          type: "string"
+        description: 
+          type: "string"
+        director: 
+          type: "string"
+        yearOfRelease:
+          type: "number"
+        castIds:
+          type: "array"
+          items:
+            type: "string"
+    MovieResponse:
+      type: "object"
       properties:
         id:
           type: "string"
