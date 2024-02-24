@@ -6,103 +6,259 @@ info:
 servers:
   - url: http://localhost:4000/api/
 tags:
-- name: "actor"
-  description: "Everything related to actors"
-- name: "movie"
-  description: "Everything related to movies"
 - name: "user"
   description: "Operations related to the user"
+- name: "actor"
+  description: "Operations related to actors"
+- name: "movie"
+  description: "Operations related to movies"
 paths:
+  /user/register:
+    post:
+      tags:
+      - "user"
+      summary: "Registers a new User"
+      description: ""
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        201:
+          description: "User created successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: "string"
+                  _id:
+                    type: "string"
+        400:
+          description: "Bad request"
+        409:
+          description: "Username or email already taken!"
+  /user/login:
+    post:
+      tags:
+        - "user"
+      summary: "Logs in a User"
+      description: ""
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLogin"
+      responses:
+        200:
+          description: "User logged in successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+                  data:
+                    type: "string"          
   /actors/:
+    post:
+      tags:
+      - "actor"
+      summary: "Creates a new Actor"
+      description: ""
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Actor"
+      responses:
+        201:
+          description: "Actor created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Actor"
+        500:
+          description: "Internal server error"
     get:
       tags:
       - "actor"
-      summary: "retrieves all actors"
+      summary: "Retrieves a list of Actors"
       description: ""
-      operationId: "getAllActors"
-      produces:
-      - "application/json"
-      - "application/xml"
       responses:
         200:
-          description: "success"
+          description: "Successfully retrieved all actors"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Actor"
+        500:
+          description: "Internal server error"
+  /actors/{id}:
+    get:
+      tags:
+      - "actor"
+      summary: "Retrieves an Actor with a specific id"
+      description: ""
+      parameters:
+        - in: path
+          name: "id"
+          description: "MongoDB id"
           schema:
-            type: "array"
-            items:
+            type: "string"
+      responses:
+        200:
+          description: "Successfully retrieved an Actor in the format of a JSON object"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Actor"
+        500: 
+          description: "Internal server error"
+    put:
+      tags:
+      - "actor"
+      summary: "Updates an Actor with a specific id"
+      description: ""
+      security:
+       - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: "id"
+          description: "MongoDB id"
+          schema: 
+            type: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+               $ref: "#/components/schemas/Actor"
+      responses:
+        201:
+          description: "Actor updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Actor"
+        404:
+          description: "Actor with specific id couldn't be updated. Check if you entered the correct id!"
+        500:
+          description: "Internal server error"
+    delete:
+      tags:
+        - "actor"
+      summary: "Deletes an Actor with a specific id"
+      description: ""
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: "id"
+          description: "MongoDB id"
+          schema:
+            type: "string"
+      responses:
+      200:
+        description: "Actor deleted successfully"
+        content:
+          application/json:
+            schema:
               $ref: "#/components/schemas/Actor"
-        400:
-          description: "Invalid"
+      404: 
+        description: "Actor with specific id couldn't be updated. Check if you entered the correct id!"
+      500:
+        description: "Internal server error"
 components:
   securitySchemes:
     ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: auth-token
+      type: "apiKey"
+      in: "header"
+      name: "auth-token"
   schemas:
     Actor:
-      type: object
+      type: "object"
       required:
         - firstName
         - lastName
       properties:
         id:
-          type: string
+          type: "string"
         firstName:
-          type: string
+          type: "string"
         lastName:
-          type: string
+          type: "string"
         yearOfBirth:
-          type: number
+          type: "number"
         awards: 
-          type: array
+          type: "array"
           items:
-            type: string
+            type: "string"
     Movie:
-      type: object
+      type: "object"
       required:
         - title
       properties:
         id:
-          type: string
+          type: "string"
         title:
-          type: string
+          type: "string"
         genre:
-          type: string
+          type: "string"
         description: 
-          type: string
+          type: "string"
         director: 
-          type: string
+          type: "string"
         yearOfRelease:
-          type: number
+          type: "number"
         cast:
-          type: array
+          type: "array"
           items:
-            $ref: '#/components/schemas/Actor'
+            $ref: "#/components/schemas/Actor"
     User:
-      type: object
+      type: "object"
       required:
         - username
         - email
         - password
       properties:
         firstName:
-          type: string
+          type: "string"
           minLength: 2
           maxLength: 200
         lastName:
-          type: string
+          type: "string"
           minLength: 2
           maxLength: 200
         username:
-          type: string
+          type: "string"
           minLength: 6
           maxLength: 25
         email:
-          type: string
+          type: "string"
         password:
-          type: string
+          type: "string"
           minLength: 8
           maxLength: 128
-        dateCreated:
-          type: string
-          format: date-time
+    UserLogin:
+      type: "object"
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+          minLength: 8
+          maxLength: 128

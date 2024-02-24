@@ -9,6 +9,7 @@ const { registerValidation, loginValidation } = require("../userValidation");
 
 
 // Register
+// /api/user/register
 router.post("/register", async (request, response) => {
     
     // Validate user input
@@ -24,11 +25,11 @@ router.post("/register", async (request, response) => {
     const emailTaken = await User.findOne({ email: request.body.email });
 
     if(usernameTaken) {
-        return response.status(400).json({ error: "Username is already taken!" });
+        return response.status(409).json({ error: "Username is already taken!" });
     }
     
     if(emailTaken) {
-        return response.status(400).json({ error: "Email is already taken!" });
+        return response.status(409).json({ error: "Email is already taken!" });
     }
 
     // Hash password
@@ -60,6 +61,7 @@ router.post("/register", async (request, response) => {
 
 
 // Login
+// /api/user/login
 router.post("/login", async (request, response) => {
 
     // Validate user input (login credentials)
