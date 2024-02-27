@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const path = require('path');
 
 // Swagger
 const swaggerUi = require("swagger-ui-express");
@@ -31,6 +32,16 @@ app.use(bodyParser.json());
 // Get the PORT from the .env file; 4000 by default if there is no other setting
 const PORT = process.env.PORT || 4000;
 
+// Serve static files (including JavaScript) from the "public" directory
+app.use(express.static(path.join(__dirname, 'frontend'), {
+    // Specify the correct MIME types for JavaScript files
+    setHeaders: (res, path, stat) => {
+      if (path.endsWith('.js')) {
+        res.setHeader('Content-Type', 'text/javascript');
+      }
+    }
+  }));
+
 // Start the server
 app.listen(PORT, function() {
     console.log("Server is running on port " + PORT);
@@ -41,12 +52,16 @@ mongoose.connect
 (
     process.env.HOST,
     {
-       useUnifiedTopology: true,
-       useNewUrlParser: true 
+
     }
 ).catch(error => console.log("Failure connecting to MongoDB: " + error));
 
 mongoose.connection.once('open', () => console.log('Successfully connected to MongoDB')); // Display a message once successfully connected to MongoDB
+
+// Set index.html as the default page
+app.get("/", (request, response) => {
+    response.sendFile(__dirname + "/frontend/index.html");
+})
 
 // Routes
 app.get("/api/welcome", (request, response) => {
