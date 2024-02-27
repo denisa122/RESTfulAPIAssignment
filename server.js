@@ -32,7 +32,8 @@ app.use(bodyParser.json());
 // Get the PORT from the .env file; 4000 by default if there is no other setting
 const PORT = process.env.PORT || 4000;
 
-// Serve static files (including JavaScript) from the "public" directory
+// Serve static files (including JavaScript) from the "frontend" directory
+// Needed it because I had an error when trying to load .js files in my frontend
 app.use(express.static(path.join(__dirname, 'frontend'), {
     // Specify the correct MIME types for JavaScript files
     setHeaders: (res, path, stat) => {
