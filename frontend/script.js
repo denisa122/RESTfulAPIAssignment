@@ -95,6 +95,7 @@ async function getMovies() {
             <p>Description: ${movie.description}</p>
             <p>Director: ${movie.director}</p>
             <p>Year of release: ${movie.yearOfRelease}</p>
+            <button class="edit-btn" data-movie-id="${movie._id}">Edit</button>
             `;
 
             moviesContainer.appendChild(movieElement);
@@ -114,7 +115,7 @@ async function createMovie(event) {
     const description = formData.get('description');
     const director = formData.get('director');
     const yearOfRelease = formData.get('yearOfRelease');
-    const cast = formData.get('cast').split(','); // Split cast input into an array
+    const cast = formData.get('cast').split(','); 
 
     try {
         // Retrieve authentication token from local storage
@@ -150,9 +151,6 @@ async function deleteMovie(event) {
     const formData = new FormData(event.target);
     const movieId = formData.get('movieId');
 
-       // Log the movieId to check if it's being passed properly
-       console.log('Movie ID:', movieId);
-
     try {
         // Retrieve authentication token from local storage
         const authToken = localStorage.getItem('authToken');
@@ -178,6 +176,81 @@ async function deleteMovie(event) {
     }
 }
 
+// Handle click events on edit buttons
+function handleEditButtonClick(event) {
+    if (event.target.classList.contains('edit-btn')) {
+        const movieId = event.target.getAttribute('data-movie-id');
+        if (movieId) {
+            // Redirect to edit movie page with movie id in URL 
+            window.location.href = `/edit_movie.html?movieId=${movieId}`;
+        } else {
+            console.error('Movie ID not found');
+        }
+    }
+}
+
+// Retrieve movie details based on its id and pre-fill the edit form
+async function getMovieDetails() {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieId = urlParams.get('movieId');
+
+        const response = await fetch(`/api/movies/${movieId}`);
+        const movie = await response.json();
+
+        document.getElementById('movieId').value = movie._id;
+        document.getElementById('title').value = movie.title;
+        document.getElementById('genre').value = movie.genre;
+        document.getElementById('description').value = movie.description;
+        document.getElementById('director').value = movie.director;
+        document.getElementById('yearOfRelease').value = movie.yearOfRelease;
+        document.getElementById('cast').value = movie.cast.join(', ');
+
+    } catch (error) {
+        console.error('Error fetching movie details: ', error);
+    }
+}
+
+// Handle form submission for updating a movie
+async function updateMovie(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const movieId = formData.get('movieId');
+    const title = formData.get('title');
+    const genre = formData.get('genre');
+    const description = formData.get('description');
+    const director = formData.get('director');
+    const yearOfRelease = formData.get('yearOfRelease');
+    const cast = formData.get('cast').split(',').map(item => item.trim()); // Split cast input into an array
+
+    try {
+        // Retrieve authentication token from local storage
+        const authToken = localStorage.getItem('authToken');
+
+        const response = await fetch(`/api/movies/${movieId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'auth-token': authToken
+            },
+            body: JSON.stringify({ title, genre, description, director, yearOfRelease, cast })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+
+            alert("Movie updated successfully!");
+            window.location.href = "/index.html"; 
+
+        } else {
+            console.error('Failed to update movie: ', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error updating movie: ', error);
+    }
+}
+
 // When the page loads
 document.addEventListener('DOMContentLoaded', () => {
     const currentPage = window.location.pathname;
@@ -185,6 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentPage === '/index.html' || currentPage === '/') {
         // Load movies by default only on the index page
         getMovies();
+
+        // Attach event listener to handle edit button clicks
+        document.addEventListener('click', handleEditButtonClick);
     } else if (currentPage === '/login.html') {
         // Attach event listener to the login form
         const loginForm = document.getElementById('loginForm');
@@ -216,6 +292,17 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteMovieForm.addEventListener('submit', deleteMovie);
         } else {
             console.error('Create movie form not found');
+        }
+    } else if (currentPage === '/edit_movie.html') {
+         // Call getMovieDetails function to populate the edit form with movie data
+         getMovieDetails();
+
+        // Attach event listener to the edit movie form
+        const editMovieForm = document.getElementById('editMovieForm');
+        if (editMovieForm) {
+            editMovieForm.addEventListener('submit', updateMovie);
+        } else {
+            console.error('Edit movie form not found');
         }
     }
 
