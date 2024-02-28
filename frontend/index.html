@@ -9,14 +9,23 @@
     </head>
 
     <body>
-        <h1>Movie Library</h1>
+        <div class="nav">
+            <a href="login.html" style="margin-right: 10px;">Login</a>
+            <a href="register.html" style="margin-right: 10px;">Sign up</a>
+        </div>
+        
+        <h1 style="text-align: center; margin-bottom: 60px;">Movie Library</h1>
 
-        <a href="login.html">Login</a>
-        <a href="register.html">Sign up</a>
-        <a href="create_movie.html">Add movie</a>
-        <a href="delete_movie.html">Delete movie</a>
-
-        <div id="movies"></div>
+        <div id="movies" class="movie-container"></div>
+        
+        <div class="movie-bttns">
+            <button class="add-btn">
+                <a href="create_movie.html" style="color:white">Add movie</a>
+            </button>
+            <button class="delete-btn">
+                <a href="delete_movie.html" style="color:white">Delete movie</a>
+            </button>
+        </div>
 
         <script src="script.js"></script>
     </body>

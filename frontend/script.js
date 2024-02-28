@@ -90,12 +90,14 @@ async function getMovies() {
             const movieElement = document.createElement('div');
             movieElement.classList.add('movie');
             movieElement.innerHTML = `
+            <div class="single-movie">
             <h2>${movie.title}</h2>
             <p>Genre: ${movie.genre}</p>
             <p>Description: ${movie.description}</p>
             <p>Director: ${movie.director}</p>
             <p>Year of release: ${movie.yearOfRelease}</p>
             <button class="edit-btn" data-movie-id="${movie._id}">Edit</button>
+            </div>
             `;
 
             moviesContainer.appendChild(movieElement);
