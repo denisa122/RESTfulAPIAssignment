@@ -1,3 +1,77 @@
+// Handle form submission for registering new user
+async function registerUser(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const firstName = formData.get('firstName');
+    const lastName = formData.get('lastName');
+    const username = formData.get('username');
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    try {
+        const response = await fetch('/api/user/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ firstName, lastName, username, email, password })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Response data: ', data);
+
+            // Display success message and redirect the user to the login page
+            alert("Account created successfully!");
+            window.location.href = '/login.html';
+        } else {
+            const errorMessage = await response.text();
+            document.getElementById('error').textContent = errorMessage;
+        }
+    } catch (error) {
+        console.error('Error creating account: ', error);
+    }
+}
+
+// Handle form submission for logging in
+async function loginUser(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    try {
+        const response = await fetch('/api/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Response Data:', data);
+            const authToken = data.data.authToken;
+            
+            // Save the authentication token to local storage
+            localStorage.setItem('authToken', authToken);
+
+
+            // Display success message and redirect the user to the index page
+            alert("Logged in successfully!");
+            window.location.href = '/index.html';
+        } else {
+            const errorMessage = await response.text();
+            document.getElementById('error').textContent = errorMessage;
+        }
+    } catch (error) {
+        console.error('Error logging in: ', error);
+    }
+}
+
 // Retrieve movies from the API and display them on the front page
 async function getMovies() {
     try {
@@ -46,9 +120,6 @@ async function createMovie(event) {
         // Retrieve authentication token from local storage
         const authToken = localStorage.getItem('authToken');
 
-        // Log authToken to the console
-        console.log('Authentication Token:', authToken);
-
         const response = await fetch('/api/movies/', {
             method: 'POST',
             headers: {
@@ -72,49 +143,47 @@ async function createMovie(event) {
     }
 }
 
-// Handle form submission for logging in
-async function loginUser(event) {
+// Handle form submission for deleting a movie
+async function deleteMovie(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
-    const email = formData.get('email');
-    const password = formData.get('password');
+    const movieId = formData.get('movieId');
+
+       // Log the movieId to check if it's being passed properly
+       console.log('Movie ID:', movieId);
 
     try {
-        const response = await fetch('/api/user/login', {
-            method: 'POST',
+        // Retrieve authentication token from local storage
+        const authToken = localStorage.getItem('authToken');
+
+        const response = await fetch(`/api/movies/${movieId}`, {
+            method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
+                'Content-Type': 'application/json',
+                'auth-token': authToken
+            }
         });
 
         if (response.ok) {
             const data = await response.json();
-            console.log('Response Data:', data);
-            const authToken = data.data.authToken;
-            
-            // Save the authentication token to local storage
-            localStorage.setItem('authToken', authToken);
 
-
-            // Redirect the user to the index page
-            window.location.href = '/index.html';
+            alert("Movie deleted successfully");
+            window.location.href = "/index.html"; 
         } else {
-            const errorMessage = await response.text();
-            document.getElementById('error').textContent = errorMessage;
+            console.error('Failed to delete movie: ', response.statusText); 
         }
     } catch (error) {
-        console.error('Error logging in: ', error);
+        console.error('Error deleting movie: ', error);
     }
 }
 
-// Call getMovies when the page loads
+// When the page loads
 document.addEventListener('DOMContentLoaded', () => {
     const currentPage = window.location.pathname;
 
     if (currentPage === '/index.html' || currentPage === '/') {
-        // Load movies only on index.html
+        // Load movies by default only on the index page
         getMovies();
     } else if (currentPage === '/login.html') {
         // Attach event listener to the login form
@@ -132,5 +201,22 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             console.error('Create movie form not found');
         }
+    } else if (currentPage === '/register.html') {
+        // Attach event listener to the register form
+        const registerForm = document.getElementById('registerForm');
+        if (registerForm) {
+            registerForm.addEventListener('submit', registerUser);
+        } else {
+            console.error('Register form not found');
+        }
+    } else if (currentPage === '/delete_movie.html') {
+        // Attach event listener to the delete movie form
+        const deleteMovieForm = document.getElementById('deleteMovieForm');
+        if (deleteMovieForm) {
+            deleteMovieForm.addEventListener('submit', deleteMovie);
+        } else {
+            console.error('Create movie form not found');
+        }
     }
+
 });
