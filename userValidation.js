@@ -17,7 +17,7 @@ const registerValidation = (data) => {
 }
 
 // Login validation
-const loginValidation = (data) => {   // Make it work with username OR email
+const loginValidation = (data) => {   // It would be ideal to make login  work with email OR username (future)
     const schema = joi.object(
         {
             email: joi.string().min(6).max(255).required(),

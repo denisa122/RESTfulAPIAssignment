@@ -72,7 +72,7 @@ async function loginUser(event) {
     }
 }
 
-// Retrieve movies from the API and display them on the front page
+// Retrieve movies from the API and display them on the index page 
 async function getMovies() {
     try {
         const response = await fetch('/api/movies/');
@@ -135,6 +135,7 @@ async function createMovie(event) {
         if (response.ok) {
             const data = await response.json();
 
+            // Display success message and redirect the user to the index page
             alert("Movie created successfully!");
             window.location.href = "/index.html"; 
 
@@ -168,6 +169,7 @@ async function deleteMovie(event) {
         if (response.ok) {
             const data = await response.json();
 
+            // Display success message and redirect the user to the index page
             alert("Movie deleted successfully");
             window.location.href = "/index.html"; 
         } else {
@@ -224,7 +226,7 @@ async function updateMovie(event) {
     const description = formData.get('description');
     const director = formData.get('director');
     const yearOfRelease = formData.get('yearOfRelease');
-    const cast = formData.get('cast').split(',').map(item => item.trim()); // Split cast input into an array
+    const cast = formData.get('cast').split(',').map(item => item.trim());
 
     try {
         // Retrieve authentication token from local storage
@@ -242,6 +244,7 @@ async function updateMovie(event) {
         if (response.ok) {
             const data = await response.json();
 
+            // Display success message and redirect the user to the index page
             alert("Movie updated successfully!");
             window.location.href = "/index.html"; 
 
@@ -253,7 +256,7 @@ async function updateMovie(event) {
     }
 }
 
-// When the page loads
+// Event listeners
 document.addEventListener('DOMContentLoaded', () => {
     const currentPage = window.location.pathname;
 
@@ -296,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Create movie form not found');
         }
     } else if (currentPage === '/edit_movie.html') {
-         // Call getMovieDetails function to populate the edit form with movie data
+         // Call getMovieDetails function to pre-fill the edit form with movie data
          getMovieDetails();
 
         // Attach event listener to the edit movie form

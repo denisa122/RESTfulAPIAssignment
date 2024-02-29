@@ -14,7 +14,7 @@ let actorSchema = new Schema (
             required: true
         },
         yearOfBirth: {type: Number},
-        awards: [{type: String}]  // An array of strings
+        awards: [{type: String}]
     }
 )
 

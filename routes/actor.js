@@ -45,6 +45,7 @@ router.get("/:id", (request, response) => {
 // /api/actors/:id
 router.put("/:id", tokenVerification, (request, response) => {
 
+    // Get id from the request
     const id = request.params.id;
     
     actor.findByIdAndUpdate(id, request.body)
@@ -66,6 +67,7 @@ router.put("/:id", tokenVerification, (request, response) => {
 // /api/actors/:id
 router.delete("/:id", tokenVerification, (request, response) => {
 
+    // Get id from the request
     const id = request.params.id;
     
     actor.findByIdAndDelete(id)

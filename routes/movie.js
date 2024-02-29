@@ -49,7 +49,6 @@ router.get("/:id", (request, response) => {
     .catch(error => { response.status(500).send( {message: error.message}); })
 });
 
-
 // Update
 
 // api/movies/:id
@@ -72,12 +71,12 @@ router.put("/:id", tokenVerification, (request, response) => {
     .catch(error => { response.status(500).send( {message: "Error editing the movie with id " + id}); })
 });
 
-
 // Delete
 
 // api/movies/:id
 router.delete("/:id", tokenVerification, (request, response) => {
 
+    // Get id from the request
     const id = request.params.id;
     
     movie.findByIdAndDelete(id)

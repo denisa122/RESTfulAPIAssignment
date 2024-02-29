@@ -59,7 +59,6 @@ router.post("/register", async (request, response) => {
     }
 });
 
-
 // Login
 // /api/user/login
 router.post("/login", async (request, response) => {

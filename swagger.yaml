@@ -7,7 +7,7 @@ servers:
   - url: http://localhost:4000/api/
 tags:
 - name: "user"
-  description: "Operations related to the user"
+  description: "Operations related to users"
 - name: "actor"
   description: "Operations related to actors"
 - name: "movie"
@@ -18,7 +18,7 @@ paths:
       tags:
       - "user"
       summary: "Registers a new User"
-      description: ""
+      description: "Registers a new User"
       requestBody:
         required: true
         content:
@@ -46,7 +46,7 @@ paths:
       tags:
         - "user"
       summary: "Logs in a User"
-      description: ""
+      description: "Logs in a User"
       requestBody:
         required: true
         content:
@@ -70,7 +70,7 @@ paths:
       tags:
       - "actor"
       summary: "Creates a new Actor"
-      description: ""
+      description: "Creates a new Actor"
       security:
         - ApiKeyAuth: []
       requestBody:
@@ -92,7 +92,7 @@ paths:
       tags:
       - "actor"
       summary: "Retrieves a list of Actors"
-      description: ""
+      description: "Retrieves a list of Actors"
       responses:
         200:
           description: "Successfully retrieved all Actors in the format of a JSON object"
@@ -109,7 +109,7 @@ paths:
       tags:
       - "actor"
       summary: "Retrieves an Actor with a specific id"
-      description: ""
+      description: "Retrieves an Actor with a specific id"
       parameters:
         - in: path
           name: "id"
@@ -129,7 +129,7 @@ paths:
       tags:
       - "actor"
       summary: "Updates an Actor with a specific id"
-      description: ""
+      description: "Updates an Actor with a specific id"
       security:
        - ApiKeyAuth: []
       parameters:
@@ -159,7 +159,7 @@ paths:
       tags:
         - "actor"
       summary: "Deletes an Actor with a specific id"
-      description: ""
+      description: "Deletes an Actor with a specific id"
       security:
         - ApiKeyAuth: []
       parameters:
@@ -184,7 +184,7 @@ paths:
       tags:
         - "movie"
       summary: "Creates a new Movie"
-      description: ""
+      description: "Creates a new Movie"
       security:
         - ApiKeyAuth: []
       requestBody:
@@ -206,7 +206,7 @@ paths:
       tags:
       - "movie"
       summary: "Retrieves a list of Movies"
-      description: ""
+      description: "Retrieves a list of Movies"
       responses:
         200:
           description: "Successfully retrieved all Movies in the format of a JSON object"
@@ -223,6 +223,7 @@ paths:
       tags:
         - "movie"
       summary: "Retrieves a list of Movies with a specific year of release property"
+      description: "Retrieves a list of Movies with a specific year of release property"
       parameters:
         - in: path
           name: "year"
@@ -243,7 +244,7 @@ paths:
       tags:
         - "movie"
       summary: "Retrieves a Movie with a specific id"
-      description: ""
+      description: "Retrieves a Movie with a specific id"
       parameters:
           - in: path
             name: "id"
@@ -263,7 +264,7 @@ paths:
       tags:
       - "movie"
       summary: "Updates a Movie with a specific id"
-      description: ""
+      description: "Updates a Movie with a specific id"
       security:
        - ApiKeyAuth: []
       parameters:
@@ -293,7 +294,7 @@ paths:
       tags:
         - "movie"
       summary: "Deletes a Movie with a specific id"
-      description: ""
+      description: "Deletes a Movie with a specific id"
       security:
         - ApiKeyAuth: []
       parameters:
